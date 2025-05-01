@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-restaurante-deployment
+  namespace: fiap
+spec:
+  selector:
+    matchLabels:
+      app: api-restaurante
+  template:
+    metadata:
+      labels:
+        app: api-restaurante
+    spec:
+      containers:
+        - name: api-restaurante-container
+          image: gabrielumbelino/restaurante-api:1.93
+          # image: k8s.gcr.io/e2e-test-images/echoserver:2.5
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: api-restaurante-configmap
+            - secretRef:
+                name: db-secret
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 100m
